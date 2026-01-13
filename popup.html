@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Ad Or Unsafe Content Blocker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+      :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --danger-gradient: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+        --success-gradient: linear-gradient(135deg, #42e695 0%, #3bb2b8 100%);
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --glass-highlight: rgba(255, 255, 255, 0.15);
+        --text-main: #ffffff;
+        --text-muted: rgba(255, 255, 255, 0.6);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 400px;
+        min-height: 600px;
+        padding: 0;
+        margin: 0;
+        font-family: "Outfit", sans-serif; /* Changed font for modern look */
+        background-color: #0f0f0f;
+        background-image: 
+          radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+          radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+          radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+        color: var(--text-main);
+        overflow-x: hidden;
+        user-select: none;
+      }
+
+      /* Animated Background Blobs */
+      .bg-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      .container {
+        padding: 24px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Scrollbar Styling */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      /* Header Styling */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--glass-border);
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+        background: linear-gradient(to right, #fff, #a5a5a5);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* Modern Toggle Switch */
+      .toggle-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--glass-bg);
+        padding: 6px 12px;
+        border-radius: 20px;
+        border: 1px solid var(--glass-border);
+      }
+
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 36px;
+        height: 20px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(255,255,255,0.2);
+        transition: .3s cubic-bezier(0.4, 0.0, 0.2, 1);
+        border-radius: 34px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        transition: .3s cubic-bezier(0.4, 0.0, 0.2, 1);
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      }
+
+      input:checked + .slider {
+        background: var(--success-gradient);
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(16px);
+      }
+
+      #toggle-label {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        color: var(--text-main);
+      }
+
+      /* Cards (Glassmorphism) */
+      .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, border-color 0.2s ease;
+      }
+
+      .glass-card:hover {
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .section-title {
+        font-size: 11px;
+        font-weight: 600;
+        margin: 0 0 16px 0;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+      }
+
+      /* Current Site Section */
+      .current-site .label {
+        font-size: 11px;
+        color: #a0a0a0;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      
+      .current-site .label::before {
+        content: '';
+        display: block;
+        width: 6px;
+        height: 6px;
+        background-color: #42e695;
+        border-radius: 50%;
+        box-shadow: 0 0 8px #42e695;
+      }
+
+      .current-site .domain {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #fff;
+        word-break: break-all;
+        text-shadow: 0 0 20px rgba(255,255,255,0.1);
+      }
+
+      /* Button Styles */
+      .button-group {
+        display: flex;
+        gap: 10px;
+      }
+
+      button {
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        font-family: inherit;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      button:active {
+        transform: scale(0.96);
+      }
+
+      .btn-primary {
+        background: var(--primary-gradient);
+        color: #ffffff;
+        flex: 1;
+        padding: 12px;
+        box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
+      }
+
+      .btn-primary:hover {
+        box-shadow: 0 6px 20px rgba(118, 75, 162, 0.5);
+        transform: translateY(-2px);
+      }
+
+      .btn-danger {
+        background: var(--danger-gradient);
+        color: #ffffff;
+        flex: 1;
+        padding: 12px;
+        box-shadow: 0 4px 15px rgba(255, 75, 43, 0.3);
+      }
+
+      .btn-danger:hover {
+        box-shadow: 0 6px 20px rgba(255, 75, 43, 0.5);
+        transform: translateY(-2px);
+      }
+
+      .btn-secondary {
+        background: var(--glass-highlight);
+        color: #fff;
+        padding: 0 20px;
+        border: 1px solid var(--glass-border);
+      }
+      
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.25);
+      }
+
+      /* Input Fields */
+      .add-domain {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      input[type="text"] {
+        flex: 1;
+        padding: 12px 16px;
+        border: 1px solid var(--glass-border);
+        border-radius: 10px;
+        font-size: 14px;
+        background: rgba(0, 0, 0, 0.2);
+        color: #ffffff;
+        font-family: inherit;
+        transition: all 0.3s ease;
+      }
+
+      input[type="text"]:focus {
+        outline: none;
+        border-color: rgba(118, 75, 162, 0.6);
+        background: rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.15);
+      }
+
+      input[type="text"]::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      /* List Items */
+      .list-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 14px;
+        margin-bottom: 8px;
+        background: rgba(255,255,255,0.02);
+        border-radius: 8px;
+        border: 1px solid transparent;
+        transition: all 0.2s ease;
+      }
+
+      .list-item:hover {
+        background: rgba(255,255,255,0.06);
+        border-color: var(--glass-border);
+        transform: translateX(2px);
+      }
+
+      .list-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .list-item .domain-name {
+        font-size: 13px;
+        color: #ececec;
+      }
+
+      /* Quick Add Buttons */
+      .btn-predefined {
+        background: rgba(255,255,255,0.05);
+        color: #42e695;
+        border: 1px solid rgba(66, 230, 149, 0.2);
+        padding: 6px 14px;
+        font-size: 11px;
+        border-radius: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .btn-predefined:hover {
+        background: rgba(66, 230, 149, 0.1);
+        border-color: #42e695;
+        box-shadow: 0 0 10px rgba(66, 230, 149, 0.1);
+      }
+
+      .btn-remove {
+        background: rgba(255, 75, 43, 0.1);
+        color: #ff4b2b;
+        border: 1px solid rgba(255, 75, 43, 0.2);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 11px;
+      }
+      
+      .btn-remove:hover {
+        background: rgba(255, 75, 43, 0.2);
+        border-color: #ff4b2b;
+      }
+
+      /* Status Messages */
+      .status {
+        margin-top: 12px;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        text-align: center;
+        animation: fadeIn 0.3s ease;
+      }
+      .status.success {
+        background: rgba(66, 230, 149, 0.15);
+        color: #42e695;
+        border: 1px solid rgba(66, 230, 149, 0.2);
+      }
+      .status.error {
+        background: rgba(255, 75, 43, 0.15);
+        color: #ff4b2b;
+        border: 1px solid rgba(255, 75, 43, 0.2);
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-5px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      /* Footer */
+      .footer {
+        text-align: center;
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid var(--glass-border);
+      }
+
+      .footer a {
+        color: #fff;
+        text-decoration: none;
+        position: relative;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+      
+      .footer a::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 1px;
+        bottom: -2px;
+        left: 0;
+        background-color: #fff;
+        transform-origin: bottom right;
+        transition: transform 0.25s ease-out;
+      }
+      
+      .footer a:hover::after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="bg-animation"></div>
+    
+    <div class="container">
+      <div class="header">
+        <h1>Content Blocker</h1>
+        <div class="toggle-container">
+          <span id="toggle-label">Active</span>
+          <label class="switch">
+            <input type="checkbox" id="toggle-extension" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="glass-card current-site">
+        <div class="label">CURRENTLY BROWSING</div>
+        <div class="domain" id="current-domain">Loading...</div>
+        <div class="button-group">
+          <button id="whitelist-current" class="btn-primary">
+            Whitelist Site
+          </button>
+          <button id="block-current" class="btn-danger">Block Site</button>
+        </div>
+      </div>
+
+      <div class="glass-card section">
+        <h3 class="section-title">Whitelisted Domains</h3>
+        <div class="add-domain">
+          <input
+            type="text"
+            id="domain-input"
+            placeholder="example.com"
+            autocomplete="off"
+          />
+          <button id="add-domain" class="btn-secondary">Add</button>
+        </div>
+        <div id="whitelist-items"></div>
+        <div class="status" id="status" style="display: none"></div>
+      </div>
+
+      <div class="glass-card section">
+        <h3 class="section-title">Quick Add Social</h3>
+        <div id="predefined-items">
+          <div class="list-item">
+            <span class="domain-name">facebook.com</span>
+            <button class="btn-predefined" data-domain="facebook.com">Add</button>
+          </div>
+          <div class="list-item">
+            <span class="domain-name">instagram.com</span>
+            <button class="btn-predefined" data-domain="instagram.com">Add</button>
+          </div>
+          <div class="list-item">
+            <span class="domain-name">twitter.com</span>
+            <button class="btn-predefined" data-domain="twitter.com">Add</button>
+          </div>
+          <div class="list-item">
+            <span class="domain-name">x.com</span>
+            <button class="btn-predefined" data-domain="x.com">Add</button>
+          </div>
+          <div class="list-item">
+            <span class="domain-name">tiktok.com</span>
+            <button class="btn-predefined" data-domain="tiktok.com">Add</button>
+          </div>
+          <div class="list-item">
+            <span class="domain-name">reddit.com</span>
+            <button class="btn-predefined" data-domain="reddit.com">Add</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        Made with ❤️ by <a href="https://jatinguptaportfolio.netlify.app/" target="_blank">Jatin Gupta</a>
+      </div>
+    </div>
+    
+    <script src="lib/gsap.min.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
