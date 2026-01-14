@@ -1,115 +1,99 @@
-🛡️ Smart Content Blocker
-Focus on what matters. A powerful, zero-build Chrome extension that intelligently blocks inappropriate content and social media distractions using smart heuristic analysis.
+# 🛡️ Add-Or-Unsafe-Content-Blocker
 
-https://raw.githubusercontent.com/jatin009v/Add-Or-Unsafe-Content-Blocker/main/images/meta.png
+> **Focus on what matters.**  
+> A powerful, zero-build Chrome extension that intelligently blocks inappropriate content and social media distractions using smart heuristic analysis — all while keeping your data private.
 
-✨ Features
-🧠 Smart Content Detection: Uses heuristic analysis to automatically identify and block inappropriate (adult/NSFW) content in real-time.
+![Smart Content Blocker](images/meta.jpg)
 
-🚫 Social Media Blocker: One-click blocking for major distractions including Facebook, Instagram, Twitter/X, TikTok, and Reddit.
+## ✨ Features
 
-⚡ Zero-Build Required: No complex build tools needed. Works with standard HTML, CSS, and JavaScript.
+- **🧠 Smart Content Detection**  
+  Uses local heuristic-based analysis to automatically detect and block inappropriate (adult/NSFW) content in real-time.
 
-🎨 Dynamic Block Page: Features an engaging, animated block page with GIFs from GIPHY API (with fallback emojis) to lighten the mood.
+- **🚫 Social Media Blocker**  
+  Pre-configured blocking for major distractions such as Facebook, Instagram, Twitter/X, TikTok, and Reddit.
 
-✅ Customizable Lists: Easily manage your allowed (whitelist) and blocked sites directly from the extension popup.
+- **⚡ Zero-Build Architecture**  
+  No Webpack, no Parcel, no heavy tooling. Built using plain HTML, CSS, and JavaScript.
 
-🔒 Privacy First: All analysis happens locally on your device. Your browsing data never leaves your computer.
+- **🎨 Dynamic Block Page**  
+  A clean, animated block page that displays motivational GIFs using the GIPHY API, with emoji fallback support.
 
-🚀 Installation
-Option 1: Load as Unpacked Extension (Developer Mode)
-Download or Clone the Repository:
-git clone https://github.com/jatin009v/Add-Or-Unsafe-Content-Blocker.git
+- **✅ Whitelist & Blocklist Management**  
+  Easily allow or block websites directly from the extension popup interface.
 
-Configure API Key (Optional, for GIF features):
+- **🔒 Privacy First**  
+  All content analysis runs locally on your device. No browsing history or personal data is sent anywhere.
 
-Create a file named .env in the project root.
+## 🚀 Installation
 
-Add your GIPHY API key: GIPHY_API_KEY=your_key_here
+### Option 1: Load Unpacked Extension (Developer Mode)
 
-Run npm run config to generate the configuration file.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/jatin009v/Add-Or-Unsafe-Content-Blocker.git
+   ```
 
-Alternatively, manually create config.js in the root directory with:
+   (Optional) Configure GIPHY API
 
-export const CONFIG = {
-  GIPHY_API_KEY: "your_key_here"
-};
+   Create a .env file in the project root
 
-Load Extension in Chrome:
+   Add your API key:
+   GIPHY_API_KEY=your_key_here
 
-Open Chrome and navigate to chrome://extensions/
+   Run:
+   npm run config
 
-Enable Developer mode (toggle in top-right corner)
 
-Click Load unpacked
+   OR manually create config.js:
 
-Select the cloned repository folder
+   export const CONFIG = {
+     GIPHY_API_KEY: "your_key_here"
+   };
 
-🛠️ Configuration
-GIPHY API Setup (Optional)
-For animated GIFs on the block page:
 
-Visit GIPHY Developers Dashboard
+   Load the extension in Chrome
 
-Create an account and a new App
+   Open chrome://extensions/
 
-Copy your API Key
+   Enable Developer mode
 
-Add it to your .env file or directly into config.js
+   Click Load unpacked
 
-📖 How to Use
-Extension Popup
-Click the Smart Content Blocker icon in Chrome's toolbar to access:
+   Select the project folder
 
-Current Site Control: See the current domain and instantly add it to your Blocklist or Whitelist
+   ✅ Extension is now active.
 
-Whitelist Management: Add trusted domains that should never be blocked
+📖 Usage
 
-Quick Block: One-click buttons to block common social media platforms
+🔘 Extension Popup
 
-Block Page Experience
-When visiting a blocked site, you'll see:
+Click the Smart Content Blocker icon to:
 
-A "Content Blocked" or "Stay Focused" message
+View the current website
+Instantly add it to the Blocklist or Whitelist
+Quickly block popular social media platforms
 
-A random focus-related GIF (if API is configured) or friendly emoji
+🚫 Block Page
 
-Option to close the tab and return to productive work
+When accessing a blocked website:
 
-💻 Technology Stack
-Manifest V3: Built with latest Chrome Extension standards
+A “Content Blocked” / “Stay Focused” message is displayed
+A random motivational GIF or friendly emoji appears
+Use Close Tab to immediately return to productive work
 
-Vanilla JavaScript: Lightweight, framework-free implementation
+💻 Technologies Used
 
-GSAP (GreenSock): Smooth, high-performance animations
+Manifest V3 – Latest Chrome extension standard
 
-Local Processing: All content analysis happens on-device for maximum privacy
+Vanilla JavaScript – Lightweight and fast
 
-🔧 Project Structure
+GSAP (GreenSock) – Smooth animations
 
-smart-content-blocker/
-├── manifest.json          # Extension configuration
-├── popup.html            # Extension popup interface
-├── popup.js              # Popup functionality
-├── background.js         # Background service worker
-├── content.js           # Content script for page analysis
-├── block.html           # Block page interface
-├── block.js             # Block page logic
-├── styles.css           # Shared styles
-├── images/              # Icons and assets
-├── config.js            # API configuration (generated)
-└── .env                 # Environment variables
+Local Heuristic Analysis – On-device content filtering
 
-🤝 Contributing
-Contributions are welcome! Feel free to:
+🧑‍💻 Author
 
-Fork the repository
+Made with ❤️ by Jatin
 
-Create a feature branch
-
-Submit a Pull Request with detailed description
-
-📝 License
-This project is open source and available under the MIT License.
-
-Stay focused, stay productive! ✨
+Stay focused. Stay productive.
