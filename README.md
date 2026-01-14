@@ -3,7 +3,7 @@
 > **Focus on what matters.**  
 > A powerful, zero-build Chrome extension that intelligently blocks inappropriate content and social media distractions using smart heuristic analysis — all while keeping your data private.
 
-![Smart Content Blocker](images/meta.jpg)
+![Smart Content Blocker](images/meta.png)
 
 ## ✨ Features
 
